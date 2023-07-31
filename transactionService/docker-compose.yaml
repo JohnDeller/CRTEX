@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  transactions-service-backend:
+    build: ./
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: on-failure
+    depends_on:
+      - db-postgres
+      - rabbitmq
+    env_file: .env
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      WAIT_HOSTS: db-postgres:5432, rabbitmq:5672
+
+    networks:
+      - full-service
+
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    restart: always
+    hostname: rabbitmq
+    env_file: .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=${BROKER_USER}
+      - RABBITMQ_DEFAULT_PASS=${BROKER_PASSWORD}
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - full-service
+
+  db-postgres:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    env_file: .env
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - full-service
+
+
+networks:
+  full-service:
+    driver: bridge

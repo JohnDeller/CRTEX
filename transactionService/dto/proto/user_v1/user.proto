@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package user_v1;
+
+option go_package = "proto/user_v1;user_v1";
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+  string id = 1;
+  double balance = 3;
+
+  reserved 4 to 10;
+
+  google.protobuf.Timestamp created_time = 11;
+  google.protobuf.Timestamp updated_time = 12;
+
+  reserved 13 to 16;
+
+}

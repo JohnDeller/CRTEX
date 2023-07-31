@@ -1,0 +1,23 @@
+{
+  "database": {
+    "host": "db-postgres",
+    "port": "5432",
+    "user_name": "postgres",
+    "db_name": "postgres",
+    "ssl_mode": "disable"
+  },
+  "broker": {
+    "host": "rabbitmq",
+    "port": "5672",
+    "user": "broker",
+    "queue": {
+      "name": "event-queue",
+      "durable": true,
+      "auto_delete": false,
+      "exclusive": false,
+      "no_wait": false
+    }
+  },
+  "host": "",
+  "port": "3000"
+}
